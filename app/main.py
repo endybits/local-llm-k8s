@@ -18,7 +18,7 @@ import copy
 
 app = FastAPI(
     title='API LLM LaMini-Flan-T5-77M K8s',
-    description= "API chatbot that allow you to use MBZUAI/LaMini-Flan-T5-77M locally/on-premise or in a secure environment"
+    description= "API chatbot that allow you to use MBZUAI/LaMini-Flan-T5-77M locally/on-premise or in a secure environment",
     version='v0.0.1'
 )
 
