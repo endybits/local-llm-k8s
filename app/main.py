@@ -68,7 +68,10 @@ def model():
     print(bot_response)
     return {
         'query': query,
-        'bot_response': bot_response
+        'bot_response': bot_response,
+        'tech_stuffs': {
+            "hostname_pod": f"{os.environ.get('HOSTNAME', 'DEFAULT_ENV')}"
+        }
     }
 
 
@@ -77,6 +80,9 @@ def model(query: str = Query(example="Write a poem to the moon")):
     bot_response = chatbot.run(query)
     response = {
         'query': query,
-        'bot_response': bot_response
+        'bot_response': bot_response,
+        'tech_stuff': {
+            "hostname_pod": f"{os.environ.get('HOSTNAME', 'DEFAULT_ENV')}"
+        }
     }
     return jsonable_encoder(response)
