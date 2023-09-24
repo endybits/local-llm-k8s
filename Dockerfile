@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.10
 
 WORKDIR /api
 
@@ -9,5 +9,6 @@ COPY ./makefile /api/makefile
 RUN make install
 
 COPY ./app /api/app
+COPY ./model /api/model
 
 CMD [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80" ]

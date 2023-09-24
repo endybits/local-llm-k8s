@@ -24,8 +24,9 @@ app = FastAPI(
 
 
 ## Loading Lamini Model
-pretrained_model_path = "./model/"
 
+pretrained_model_path = os.environ.get('MODEL_PATH') if os.environ.get('MODEL_PATH') else "./model/"
+print(f'pretrained_model_path: {pretrained_model_path}')
 
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=pretrained_model_path)
 base_model = AutoModelForSeq2SeqLM.from_pretrained(
