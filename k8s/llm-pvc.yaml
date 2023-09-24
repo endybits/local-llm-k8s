@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: llm-pretrained-model-pvc
+spec:
+  accessMode: 
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 700Mi

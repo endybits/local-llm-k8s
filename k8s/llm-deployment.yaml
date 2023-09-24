@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-api
+  labels:
+    app: llm-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: llm-api
+  template:
+    metadata:
+      labels:
+        app: llm-api
+    spec:
+      containers:
+      - name: trained-llm-api
+        image: endybits/trained-llm-api:0.0.1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-api-service
+spec:
+  selector:
+    app: llm-api
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30100
