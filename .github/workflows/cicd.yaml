@@ -10,6 +10,25 @@ jobs:
     steps:
     - name: Get existing tag
       run: |
-        echo "Github ref"
-        echo $GITHUB_REF
+        if [[ $GITHUB_REF == "refs/tags/"* ]]; then
+          latest_tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname:short)' refs/tags/)
+          # Extract the version number
+          version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
+          destructured_version=($(echo $version | awk -F'.' '{ print $1, $2, $3 }'))
+          if [[ ${destructured_version[2]} < 9 ]]; then
+            new_version="${destructured_version[0]}.${destructured_version[1]}.$(( ${destructured_version[2]} + 1))"
+          else
+            if [[ ${destructured_version[1]} < 9 ]]; then
+              new_version="${destructured_version[0]}.$(( ${destructured_version[1]} + 1 )).0"
+            else
+              ##
+              v_n=$(echo ${destructured_version[0]} | tr 'v' '\n')
+              new_version="v$((${v_n[0]} + 1)).0.0"
+            fi
+          fi
+          echo "New version: $new_version"
+          echo "::set-output name=new_version::$new_version"
+        else
+          echo "Not a tag. Skipping version determination."
+        fi
 
