@@ -12,6 +12,7 @@ jobs:
       run: |
         if [[ $GITHUB_REF == "refs/tags/"* ]]; then
           latest_tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname:short)' refs/tags/)
+          echo " Latest Tag: $latest_tag"
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
           destructured_version=($(echo $version | awk -F'.' '{ print $1, $2, $3 }'))
