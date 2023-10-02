@@ -1,0 +1,14 @@
+name: CICD Pipeline
+
+on:
+- push
+env:
+  DOCKER_REGISTRY_USERNAME: "endybits"
+jobs:
+  Getting-latest-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get existing tag
+      run: |
+        echo "Github ref"
+        echo $GITHUB_REF
