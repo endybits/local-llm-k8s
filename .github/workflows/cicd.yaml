@@ -8,6 +8,10 @@ jobs:
   Getting-latest-version:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+      with:
+        # 
+        fetch-depth: 0
     - name: Get existing tag
       run: |
         latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
