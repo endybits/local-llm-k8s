@@ -34,7 +34,8 @@ jobs:
             fi
           fi
           echo "New version: $new_version"
-          echo "::set-output name=new_version::$new_version"
+          #echo "::set-output name=new_version::$new_version"
+          echo "{new_version}={$new_version}" >> $GITHUB_OUTPUT
         else
           echo "Not a tag. Skipping version determination."
         fi
