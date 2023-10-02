@@ -16,12 +16,12 @@ jobs:
       run: |
         latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
         echo "Latest tag is: $latest_tag"
-        if [[ $GITHUB_REF == "refs/tags/"* ]]; then
-          latest_tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname:short)' refs/tags/)
-          echo " Latest Tag: $latest_tag"
+        #if [[ $GITHUB_REF == "refs/tags/"* ]]; then
+        if [[ $latest_tag == "v"* ]]; then
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
           destructured_version=($(echo $version | awk -F'.' '{ print $1, $2, $3 }'))
+          # Increment version
           if [[ ${destructured_version[2]} < 9 ]]; then
             new_version="${destructured_version[0]}.${destructured_version[1]}.$(( ${destructured_version[2]} + 1))"
           else
