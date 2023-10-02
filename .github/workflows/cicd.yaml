@@ -12,3 +12,4 @@ jobs:
       run: |
         echo "Github ref"
         echo $GITHUB_REF
+
