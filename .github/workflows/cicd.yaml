@@ -10,7 +10,8 @@ jobs:
     steps:
     - name: Get existing tag
       run: |
-        echo $GITHUB_REF
+        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        echo "Latest tag is: $latest_tag"
         if [[ $GITHUB_REF == "refs/tags/"* ]]; then
           latest_tag=$(git for-each-ref --sort=-v:refname --count=1 --format '%(refname:short)' refs/tags/)
           echo " Latest Tag: $latest_tag"
