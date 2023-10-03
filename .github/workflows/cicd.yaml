@@ -24,7 +24,7 @@ jobs:
         echo "LATEST TAG: $latest_tag"
     - name: Get existing tag
       run: |        
-        if [[ $latest_tag == "v"* ]]; then
+        if [[ $latest_tag =~ ^v[0-9].[0-9].[0-9]$ ]]; then
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
           destructured_version=($(echo $version | awk -F'.' '{ print $1, $2, $3 }'))
