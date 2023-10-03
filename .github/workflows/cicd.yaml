@@ -16,8 +16,7 @@ jobs:
     - name: Get latest tag
       run: |
         sudo apt install -y jq
-        URL_REGISTRY='https://registry.hub.docker.com/v2/repositories/$DOCKER_REGISTRY_USERNAME/$DOCKER_REGISTRY_REPOSITORY/tags/'
-        registry_tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS $URL_REGISTRY" | jq -r '.results[].name')
+        registry_tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS 'https://registry.hub.docker.com/v2/repositories/$DOCKER_REGISTRY_USERNAME/$DOCKER_REGISTRY_REPOSITORY/tags/'" | jq -r '.results[].name')
         echo "Tags: $registry_tags"
         sorted_tags=($(printf "%s\n" "${registry_tags[@]}" | sort -Vr ))
         latest_tag=${sorted_tags[0]}
