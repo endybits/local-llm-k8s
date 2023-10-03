@@ -65,5 +65,7 @@ jobs:
             echo "Not a tag. Skipping version determination."
           fi
         fi
-        echo $NEW_TAG
+    - name: Packaging and Uploading
+      run: |
+        echo " New tag image version: $NEW_TAG"
 
