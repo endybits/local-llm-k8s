@@ -16,13 +16,15 @@ jobs:
     - name: Get latest tag
       run: |
         sudo apt install -y jq
-        tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS 'https://registry.hub.docker.com/v2/repositories/$DOCKER_REGISTRY_USERNAME/$DOCKER_REGISTRY_REPOSITORY/tags/'" | jq -r '.results[].name')
+        registry_tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS 'https://registry.hub.docker.com/v2/repositories/$DOCKER_REGISTRY_USERNAME/$DOCKER_REGISTRY_REPOSITORY/tags/'" | jq -r '.results[].name')
         echo "Tags: $tags"
+        sorted_tags=($(printf "%s\n" "${tags[@]}" | sort -Vr ))
+        latest_tag=${sorted_tags[0]}
+        echo "LATEST TAG: $latest_tag"
     - name: Get existing tag
       run: |
-        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-        echo "Latest tag is: $latest_tag"
-        #if [[ $GITHUB_REF == "refs/tags/"* ]]; then
+        #latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+        
         if [[ $latest_tag == "v"* ]]; then
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
@@ -43,6 +45,26 @@ jobs:
           #echo "::set-output name=new_version::$new_version"
           echo "{new_version}={$new_version}" >> $GITHUB_OUTPUT
         else
-          echo "Not a tag. Skipping version determination."
+
+          if [[ $latest_tag =~ '^[0-9]' ]]; then
+            # Extract the version number
+            version=$(echo $latest_tag | grep -oP '^\d+\.\d+\.\d+$')
+            destructured_version=($(echo $version | awk -F'.' '{ print $1, $2, $3 }'))
+            # Increment version
+            if [[ ${destructured_version[2]} < 9 ]]; then
+              new_version="${destructured_version[0]}.${destructured_version[1]}.$(( ${destructured_version[2]} + 1))"
+            else
+              if [[ ${destructured_version[1]} < 9 ]]; then
+                new_version="${destructured_version[0]}.$(( ${destructured_version[1]} + 1 )).0"
+              else
+                new_version="$((${destructured_version[0]} + 1)).0.0"
+              fi
+            fi
+            echo "New version: $new_version"
+            #echo "::set-output name=new_version::$new_version"
+            echo "{new_version}={$new_version}" >> $GITHUB_OUTPUT
+          else
+            echo "Not a tag. Skipping version determination."
+          fi
         fi
 
