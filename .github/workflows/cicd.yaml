@@ -4,6 +4,7 @@ on:
 - push
 env:
   DOCKER_REGISTRY_USERNAME: "endybits"
+  DOCKER_REGISTRY_REPOSITORY: "trained-llm-api"
 jobs:
   Getting-latest-version:
     runs-on: ubuntu-latest
@@ -12,6 +13,10 @@ jobs:
       with:
         # 
         fetch-depth: 0
+    - name: Get latest tag
+      run: |
+        tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS 'https://registry.hub.docker.com/v2/repositories/${{DOCKER_REGISTRY_USERNAME}}/${{DOCKER_REGISTRY_REPOSITORY}}/tags/'" | jr -r '.results[].name')
+        echo "Tags: $tags"
     - name: Get existing tag
       run: |
         latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
