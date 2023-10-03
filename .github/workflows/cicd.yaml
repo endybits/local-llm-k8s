@@ -22,9 +22,7 @@ jobs:
         latest_tag=${sorted_tags[0]}
         echo "LATEST TAG: $latest_tag"
     - name: Get existing tag
-      run: |
-        #latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-        
+      run: |        
         if [[ $latest_tag == "v"* ]]; then
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
@@ -45,7 +43,8 @@ jobs:
           #echo "::set-output name=new_version::$new_version"
           echo "{new_version}={$new_version}" >> $GITHUB_OUTPUT
         else
-
+          echo "Before IF ^[0-9].[0-9].[0-9]$"
+          echo $([[ $latest_tag =~ ^[0-9].[0-9].[0-9]$ ]])
           if [[ $latest_tag =~ ^[0-9].[0-9].[0-9]$ ]]; then
             # Extract the version number
             version=$(echo $latest_tag | grep -oP '^\d+\.\d+\.\d+$')
