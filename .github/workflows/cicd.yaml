@@ -14,6 +14,7 @@ jobs:
         # 
         fetch-depth: 0
     - name: Get latest tag
+      id: set_tag
       run: |
         sudo apt install -y jq
         registry_tags=$(docker run --rm --entrypoint /bin/sh alpine -c "apk add -q curl && curl -sS 'https://registry.hub.docker.com/v2/repositories/$DOCKER_REGISTRY_USERNAME/$DOCKER_REGISTRY_REPOSITORY/tags/'" | jq -r '.results[].name')
@@ -60,12 +61,12 @@ jobs:
             echo "New version: $new_version"
             export NEW_TAG=$new_version
             #echo "::set-output name=new_version::$new_version"
-            echo "{new_version}={$new_version}" >> $GITHUB_OUTPUT
+            echo "{new_version}={$new_version}" >> $NEW_VERSION
           else
             echo "Not a tag. Skipping version determination."
           fi
         fi
     - name: Packaging and Uploading
       run: |
-        echo " New tag image version: $NEW_TAG"
+        echo " New tag image version: $NEW_VERSION"
 
