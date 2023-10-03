@@ -21,9 +21,7 @@ jobs:
         sorted_tags=($(printf "%s\n" "${registry_tags[@]}" | sort -Vr ))
         #latest_tag=${sorted_tags[0]}
         latest_tag="v0.1.1"
-        echo "LATEST TAG: $latest_tag"
-    - name: Get existing tag
-      run: |        
+        echo "LATEST TAG: $latest_tag"     
         if [[ $latest_tag =~ ^v[0-9].[0-9].[0-9]$ ]]; then
           # Extract the version number
           version=$(echo $latest_tag | grep -oP '^v\d+\.\d+\.\d+$')
